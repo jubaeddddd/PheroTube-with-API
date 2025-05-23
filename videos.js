@@ -50,8 +50,8 @@ const loadCategories = async () => {
 }
 //2- fetch, load and Show videos in html
 //create loadVideos
-const loadVideos = async () => {
-    const fetched = await fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+const loadVideos = async (title="") => {
+    const fetched = await fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${title}`)
     const data = await fetched.json()
     const display = displayVideos(data.videos)
 }
@@ -120,5 +120,10 @@ const displayVideos = (videos) => {
         videosContainer.appendChild(divv)
     }
 }
+
+document.getElementById('search').addEventListener("keyup",(e)=>{
+    loadVideos(e.target.value)
+})
+
 loadCategories()
 loadVideos()
