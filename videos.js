@@ -7,7 +7,7 @@ const getTime = (time) => {
 }
 const removeActiveButtons = () => {
     const buttons = document.getElementsByClassName('category-btn')
-    for(let button of buttons){
+    for (let button of buttons) {
         button.classList.remove('colouring-btn')
     }
 }
@@ -24,6 +24,20 @@ const categoryWiseVideo = (id) => {
         })
 
 
+}
+const showDetails = async (videoId) => {
+    const url = `https://openapi.programming-hero.com/api/phero-tube/video/${videoId}`
+    const res = await fetch(url)
+    const data = await res.json()
+    displayDetails(data)
+}
+const displayDetails = (video) => {
+    const detailContainer = document.getElementById('ModalContent')
+    detailContainer.innerHTML = `
+       <img class="w-full" src="${video.video.thumbnail}" />
+       <p>${video.video.description}</p>
+    `
+    document.getElementById('CustomModal').showModal();
 }
 
 
@@ -52,7 +66,7 @@ const displayCategories = (data) => {
     for (const item of data) {
         const buttonDiv = document.createElement('div')
         buttonDiv.innerHTML = `
-           <button id="btn-${item.category_id}" onclick="categoryWiseVideo(${item.category_id})" class='btn category-btn'>
+           <button id="btn-${item.category_id}" onclick="categoryWiseVideo('${item.category_id}')" class='btn category-btn'>
              ${item.category}
            </button>
         `
@@ -67,7 +81,7 @@ const displayVideos = (videos) => {
         videosContainer.classList.remove('grid')
         videosContainer.innerHTML = `
            <div class="min-h-[300px] w-full flex flex-col justify-center items-center">
-                  <img src="icon.png"/>
+                  <img src='Icon.png'/>
                   <h1 class="text-3xl font-bold text-center">Oops!Sorry,There is no<br>content here</h1>
  
            </div>
@@ -94,11 +108,15 @@ const displayVideos = (videos) => {
            <h2 class="font-bold">${video.title}</h2>
            <div class="flex gap-2">
               <p class="text-gray-400">${video.authors[0].profile_name}</p>
-              ${video.authors[0].verified === true ? '<img class="w-5" src="https://img.icons8.com/?size=96&id=D9RtvkuOe31p&format=png"' : ""
+              ${video.authors[0].verified === true ? '<img class="w-5" src="https://img.icons8.com/?size=96&id=D9RtvkuOe31p&format=png"/>' : ""
             }
            </div>
+           <div>
+              <button onclick="showDetails('${video.video_id}')" class="btn my-2 text-white bg-red-600">Details</button>
+           </div>
           </div>
-       </div>`
+        </div>
+    `
         videosContainer.appendChild(divv)
     }
 }
